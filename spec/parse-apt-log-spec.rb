@@ -83,9 +83,11 @@ RSpec.describe "#scan_package_names" do
   end
 end
 
-RSpec.describe "#read_apt_logs" do
-  it "reads apt log files from /var/log/apt dir" do
-    allow(self).to receive(:read_file)
-    read_apt_logs
+RSpec.describe "#read_apt_log_dir" do
+  let(:file_content)  { File.open('spec/sample/history.log') { |f| f.read } }
+  let(:log2_content) { read_file 'spec/sample/history.log.2' }
+
+  it "reads all apt log files from /var/log/apt dir and return merged content" do
+    expect(read_apt_log_dir('spec/sample/')).to eq log2_content + file_content + file_content # order matters
   end
 end

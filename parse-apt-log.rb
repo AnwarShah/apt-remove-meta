@@ -24,6 +24,7 @@ def pretty_output(section_hash)
   raise ArgumentError.new('Invalid argument: Not an apt-section hash') unless section_hash.key?("Commandline")
   puts "Full command: " + section_hash["Commandline"]
   puts "User: " + section_hash["Requested-By"]
+  puts "Date: " + section_hash["Start-Date"]
   puts "Package change details:"
   puts "Installed: " + scan_package_names(section_hash["Install"]) if section_hash.key?("Install")
   puts "Upgraded: " + scan_package_names(section_hash["Upgrade"]) if section_hash.key?("Upgrade")
@@ -32,16 +33,22 @@ def pretty_output(section_hash)
   puts "Purged: " + scan_package_names(section_hash["Purge"]) if section_hash.key?("Purge")
 end
 
-def read_apt_logs
-  read_file('/var/log/apt/history.log')
+def read_apt_log_dir(dir = '/var/log/apt/')
+  log_file_regex = dir + 'history.log*'
+  log_files = Dir.glob(log_file_regex)
+  content = '' # the content of all log files
+  log_files.each do |log_file|
+    content += read_file(log_file)
+  end
+  content
 end
 
 if $0 == __FILE__
-  print "Enter the command or package name to search: "
+  log_contents = read_apt_log_dir
+  print "Enter a command or package name to search log: "
   search_term = gets.chomp
 
-  file_content = read_file('../history.log.1')
-  content_hash = parse_into_hash(file_content)
+  content_hash = parse_into_hash(log_contents)
   found_results = find_in_commands(content_hash, search_term)
 
   puts "Found #{found_results.size} results\n"
