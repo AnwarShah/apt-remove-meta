@@ -1,6 +1,5 @@
 require 'spec_helper'
-require_relative '../apt-log-to-hash'
-require_relative '../parse-apt-log'
+require_relative '../lib/apt-log-to-hash'
 include AptLogToHash
 
 # no of sections in the referenced history.log file
