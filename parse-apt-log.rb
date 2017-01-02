@@ -1,35 +1,23 @@
-def read_file(filename)
-  begin
-    unless File.exist?(filename)
-      raise ArgumentError.new("Invalid filename")
-    end
-  end
+require_relative 'apt-log-to-hash'
 
-  # Read the file first
-  file_content = nil; # contents of the file will be stored here
-  File.open(filename) do |f|
-    file_content = f.read
-  end
-end
+include AptLogToHash
 
-# This method takes the raw apt-history file content
-# and store into an array of hashes
-def parse_into_hash(file_content)
-  # apt-history file is seperated by double new line
-  file_sections = file_content.split("\n\n")
-
-  # split the sections by line within them
-  file_sections.map! { |section| section.split("\n") }
-
-  # split each line of the sections by : seperator
-  file_sections.map! do |section|
-    section.map! do |line|
-      line.partition(": ").values_at(0, 2) # we don't need the seperator
-    end
-    section.to_h # Now make a hash of key-value pairs from 2-D array
+# This method finds a section containing a term
+# in Commandline
+def find_in_commands(content_hash_arr, search_term)
+  return [] if search_term.empty?
+  content_hash_arr.select do |hash|
+    hash if hash["Commandline"].match(search_term)
   end
 end
 
 def read_apt_logs
   read_file('/var/log/apt/history.log')
+end
+
+if $0 == __FILE__
+  file_content = read_file('history.log')
+  content_hash = parse_into_hash(file_content)
+  p find_in_commands(content_hash, 'ttf-mscorefonts-installer')
+  p find_in_commands(content_hash, '')
 end
