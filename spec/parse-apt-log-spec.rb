@@ -2,10 +2,10 @@ require 'spec_helper'
 require_relative '../parse-apt-log'
 include AptLogToHash
 
-FILE_CONTENT = File.open('history.log') { |f| f.read }
 
 RSpec.describe "#find_in_commands method" do
-  let(:file_content)  { FILE_CONTENT }
+  let(:log_file_loc) { 'history.log' }
+  let(:file_content)  { File.open(log_file_loc) { |f| f.read } }
   let(:content_hash_arr) { parse_into_hash(file_content) }
 
   context("when 2 arguments aren't passed") do
