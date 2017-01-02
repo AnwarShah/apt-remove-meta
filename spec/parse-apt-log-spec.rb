@@ -4,7 +4,7 @@ include AptLogToHash
 
 
 RSpec.describe "#find_in_commands method" do
-  let(:log_file_loc) { 'history.log' }
+  let(:log_file_loc) { 'spec/sample/history.log' }
   let(:file_content)  { File.open(log_file_loc) { |f| f.read } }
   let(:content_hash_arr) { parse_into_hash(file_content) }
 

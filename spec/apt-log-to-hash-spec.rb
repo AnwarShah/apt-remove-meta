@@ -5,7 +5,7 @@ include AptLogToHash
 # no of sections in the referenced history.log file
 
 RSpec.describe AptLogToHash, type: 'module' do
-  let(:log_file_loc) { 'history.log' }
+  let(:log_file_loc) { 'spec/sample/history.log' }
   let(:log_file_content) { File.open(log_file_loc) { |f| f.read } }
   let(:sections_in_file) { 12 }
 
