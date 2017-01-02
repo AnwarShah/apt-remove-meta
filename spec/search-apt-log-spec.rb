@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../parse-apt-log'
+require_relative '../search-apt-log'
 include AptLogToHash
 
 
