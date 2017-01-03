@@ -43,10 +43,17 @@ def read_apt_log_dir(dir = '/var/log/apt/')
   content
 end
 
+def get_search_term_from_user
+  print "Enter a command or package name to search log: "
+  gets.chomp
+end
+
 if $0 == __FILE__
   log_contents = read_apt_log_dir
-  print "Enter a command or package name to search log: "
-  search_term = gets.chomp
+
+  # If any arguments are passed, those'll be used as search_terms
+  # otherwise get input from user and use it
+  search_term = $*.empty? ? get_search_term_from_user : $*.join(' ')
 
   content_hash = parse_into_hash(log_contents)
   found_results = find_in_commands(content_hash, search_term)
